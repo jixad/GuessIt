@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/navigation"
+    app:startDestination="@id/mainFragment">
+
+    <fragment
+        android:id="@+id/mainFragment"
+        android:name="com.example.guessit.ui.main.MainFragment"
+        android:label="MainFragment"
+        tools:layout="@layout/main_fragment">
+        <action
+            android:id="@+id/action_mainFragment_to_createRoomFragment"
+            app:destination="@id/createRoomFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:launchSingleTop="true"
+            app:popEnterAnim="@anim/slide_in_right"
+            app:popExitAnim="@anim/slide_out_left" />
+        <action
+            android:id="@+id/action_mainFragment_to_joinFragment"
+            app:destination="@id/joinFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/createRoomFragment"
+        android:name="com.example.guessit.ui.create.CreateRoomFragment"
+        android:label="CreateRoomFragment"
+        tools:layout="@layout/fragment_create_room" >
+        <action
+            android:id="@+id/action_createRoomFragment_to_waitingFragment"
+            app:destination="@id/waitingFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:launchSingleTop="true"
+            app:popEnterAnim="@anim/slide_in_right"
+            app:popExitAnim="@anim/slide_out_left"/>
+        <action
+            android:id="@+id/action_createRoomFragment_to_mainFragment"
+            app:destination="@id/mainFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/waitingFragment"
+        android:name="com.example.guessit.ui.waiting.WaitingFragment"
+        android:label="fragment_waiting"
+        tools:layout="@layout/fragment_waiting" >
+        <argument
+            android:name="player1"
+            app:argType="string" />
+        <action
+            android:id="@+id/action_waitingFragment_to_gameFragment"
+            app:destination="@id/gameFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/joinFragment"
+        android:name="com.example.guessit.ui.join.JoinFragment"
+        android:label="JoinFragment"
+        tools:layout="@layout/fragment_join">
+        <action
+            android:id="@+id/action_joinFragment_to_mainFragment"
+            app:destination="@id/mainFragment" />
+        <action
+            android:id="@+id/action_joinFragment_to_gameFragment"
+            app:destination="@id/gameFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/gameFragment"
+        android:name="com.example.guessit.ui.game.GameFragment"
+        android:label="GameFragment"
+        tools:layout="@layout/fragment_game">
+        <argument
+            android:name="isCreator"
+            app:argType="boolean"
+            android:defaultValue="false" />
+        <argument
+            android:name="isJoiner"
+            app:argType="boolean"
+            android:defaultValue="false" />
+        <argument
+            android:name="code"
+            app:argType="string"
+            app:nullable="true" />
+        <action
+            android:id="@+id/action_gameFragment_to_finishFragment"
+            app:destination="@id/finishFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/finishFragment"
+        android:name="com.example.guessit.ui.finish.FinishFragment"
+        android:label="fragment_finish"
+        tools:layout="@layout/fragment_finish" />
+</navigation>

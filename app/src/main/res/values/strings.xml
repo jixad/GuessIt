@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">Guess It</string>
+    <string name="start_a_new_game">Start a new game</string>
+    <string name="join_a_game">Join a game</string>
+    <string name="enter_your_name">Enter your name</string>
+    <string name="start">Start</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="join">Join</string>
+    <string name="enter_code_og_the_game">Enter code og the game</string>
+    <string name="logo">Logo</string>
+    <string name="end_game">End game</string>
+    <string name="skip">Skip</string>
+    <string name="the_word_is">The word is</string>
+    <string name="correct">Correct</string>
+</resources>
