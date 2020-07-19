@@ -1,22 +1,20 @@
 package com.example.guessit.ui.waiting
 
-import android.content.ContentValues
-import android.content.ContentValues.TAG
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
+import android.widget.ImageView
+import androidx.activity.addCallback
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.findNavController
-import com.example.guessit.R
+import com.bumptech.glide.Glide
 import com.example.guessit.databinding.FragmentWaitingBinding
 import com.google.firebase.database.*
+import com.example.guessit.R
+
 
 /**
  * A simple [Fragment] subclass.
@@ -28,7 +26,15 @@ class WaitingFragment : Fragment() {
     private lateinit var viewModel: WaitingViewModel
     private lateinit var viewModelFactory: WaitingViewModelFactory
     private lateinit var database: DatabaseReference
-    private lateinit var childEventListener: ChildEventListener
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        val callback = requireActivity().onBackPressedDispatcher.addCallback(this) {
+            viewModel.deleteGame()
+            findNavController().navigate(WaitingFragmentDirections.actionWaitingFragmentToMainFragment())
+        }
+        callback.isEnabled = true
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -50,46 +56,30 @@ class WaitingFragment : Fragment() {
 
         binding.viewModel = viewModel
 
-        childEventListener = object: ChildEventListener {
+        val loadingImage: ImageView = binding.imageView
+        Glide.with(this).load(R.drawable.loading_gif).into(loadingImage)
+
+        val player2Listener = object: ValueEventListener {
             override fun onCancelled(error: DatabaseError) {
+                database.child("games").removeEventListener(this)
             }
 
-            override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                if (snapshot.value!=null){
+                    val action = WaitingFragmentDirections.actionWaitingFragmentToGameFragment(viewModel.code.value)
+                    action.isJoiner = false
+                    action.isCreator = true
+                    findNavController().navigate(action)
+                }
             }
-
-            override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
-                val action = WaitingFragmentDirections.actionWaitingFragmentToGameFragment(viewModel.code.value)
-                action.isJoiner = false
-                action.isCreator = true
-                findNavController().navigate(action)
-            }
-
-            override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
-            }
-
-            override fun onChildRemoved(snapshot: DataSnapshot) {
-            }
-
         }
 
-        database.child(viewModel.code.value!!).addChildEventListener(childEventListener)
-
-
+        database.child(viewModel.code.value!!).child("player2").addValueEventListener(
+            player2Listener
+        )
 
         return binding.root
     }
-
-    override fun onStop(){
-        super.onStop()
-        database.child(viewModel.code.value!!).removeEventListener(childEventListener)
-        //viewModel.deleteRoom()
-    }
-
-//    override fun onDestroy() {
-//        super.onDestroy()
-//        database.child(viewModel.code.value!!).removeEventListener(childEventListener)
-//        viewModel.deleteRoom()
-//    }
 
     companion object {
         @JvmStatic

@@ -1,27 +1,29 @@
 package com.example.guessit.model
-import kotlinx.serialization.Serializable
+import com.google.firebase.database.Exclude
+import com.google.firebase.database.IgnoreExtraProperties
 
-@Serializable
-class Game {
-
-    var player1: String = ""
-    var player2: String = ""
-    var code: String = ""
-    var player1Score: Int = 0
-    var player2Score: Int = 0
-    var isPlayer2Turn: Boolean? = null
+@IgnoreExtraProperties
+class Game(
+    var player1: String = "",
+    var player2: String? = "",
+    var code: String = "",
+    var player1Score: Int? = 0,
+    var player2Score: Int? = 0,
+    var isPlayer2Turn: Boolean? = null,
     var isGameFinished: Boolean? = null
+) {
 
-    constructor()
-
-    constructor(player1: String, player2: String, code: String, player1Score: Int,
-                player2Score: Int) {
-        this.player1 = player1
-        this.player2 = player2
-        this.code = code
-        this.player1Score = player1Score
-        this.player2Score = player2Score
-        //this.isPlayer2Turn = isPlayer2Turn
-        //this.isGameFinished = isGameFinished
+    @Exclude
+    fun toMap(): Map<String, Any?> {
+        return mapOf(
+            "player1" to player1,
+            "player2" to player2,
+            "code" to code,
+            "player1Score" to player1Score,
+            "player2Score" to player2Score,
+            "player2Turn" to isPlayer2Turn,
+            "gameFinished" to isGameFinished
+        )
     }
+
 }

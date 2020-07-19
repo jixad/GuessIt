@@ -35,7 +35,7 @@ class JoinViewModel: ViewModel() {
 
         override fun onDataChange(snapshot: DataSnapshot) {
             if (snapshot.exists()) {
-                if (snapshot.child("player2").value.toString().isEmpty()){
+                if (snapshot.child("player2").value==null){
                     Log.e(TAG, "Empty")
                     val game = Game()
                     game.player1 = snapshot.child("player1").value.toString()

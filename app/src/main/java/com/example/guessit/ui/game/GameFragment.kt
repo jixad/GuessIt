@@ -7,7 +7,6 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -15,6 +14,7 @@ import androidx.navigation.fragment.findNavController
 import com.example.guessit.R
 import com.example.guessit.databinding.FragmentGameBinding
 import com.google.firebase.database.*
+import com.google.firebase.database.ktx.getValue
 
 /**
  * A simple [Fragment] subclass.
@@ -50,8 +50,15 @@ class GameFragment : Fragment() {
         binding.viewModel = viewModel
         binding.lifecycleOwner = viewLifecycleOwner
 
+        if(GameFragmentArgs.fromBundle(requireArguments()).isCreator) {
+            binding.skipButton.isEnabled = false
+            binding.correctButton.isEnabled = false
+            binding.startButton.isEnabled = true
+        }
+
         if(GameFragmentArgs.fromBundle(requireArguments()).isJoiner) {
-            Log.e(TAG, "JOINER")
+            binding.skipButton.isEnabled = false
+            binding.correctButton.isEnabled = false
             binding.startButton.isEnabled = false
         }
 
@@ -59,6 +66,8 @@ class GameFragment : Fragment() {
             viewModel.player2Turn.observe(viewLifecycleOwner, Observer {
                 if(it){
                     binding.startButton.isEnabled = false
+                    binding.correctButton.isEnabled = false
+                    binding.skipButton.isEnabled = false
                 }
             })
         }
@@ -94,9 +103,35 @@ class GameFragment : Fragment() {
         database.child(viewModel.code.value!!).child("player2Turn").addValueEventListener(playerTurnListener)
         database.child(viewModel.code.value!!).child("gameFinished").addValueEventListener(gameFinishListener)
 
+        database.child(viewModel.code.value!!).child("player1Score").addValueEventListener(
+            object: ValueEventListener {
+                override fun onCancelled(error: DatabaseError) {
+                }
+
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    val score: Int? = snapshot.getValue<Int>()
+                    viewModel.setPlayer1Score(score!!)
+                }
+            }
+        )
+
+        database.child(viewModel.code.value!!).child("player2Score").addValueEventListener(
+            object: ValueEventListener {
+                override fun onCancelled(error: DatabaseError) {
+                }
+
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    val score: Int? = snapshot.getValue<Int>()
+                    viewModel.setPlayer2Score(score!!)
+                }
+            }
+        )
+
         viewModel.eventGameFinish.observe(viewLifecycleOwner, Observer {
             if (it){
-                val action = GameFragmentDirections.actionGameFragmentToFinishFragment()
+                val action = GameFragmentDirections.actionGameFragmentToFinishFragment(
+                    viewModel.code.value!!
+                )
                 findNavController().navigate(action)
             }
         })
@@ -104,7 +139,19 @@ class GameFragment : Fragment() {
         viewModel.disabledStartButton.observe(viewLifecycleOwner, Observer {
             if(it){
                 binding.startButton.isEnabled = false
+                binding.skipButton.isEnabled = true
+                binding.correctButton.isEnabled = true
             }
+        })
+
+        viewModel.player1Score.observe(viewLifecycleOwner, Observer {
+            if (GameFragmentArgs.fromBundle(requireArguments()).isCreator)
+                binding.scoreText.text = it.toString()
+        })
+
+        viewModel.player2Score.observe(viewLifecycleOwner, Observer {
+            if (GameFragmentArgs.fromBundle(requireArguments()).isJoiner)
+                binding.scoreText.text = it.toString()
         })
 
         return binding.root

@@ -10,11 +10,13 @@ import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
 import com.example.guessit.model.Game
 import com.google.firebase.database.*
+import com.google.firebase.database.ktx.getValue
 
-class GameViewModel(isCreator: Boolean, isJoiner: Boolean, code: String?): ViewModel() {
+class GameViewModel(private var isCreator: Boolean, private var isJoiner: Boolean, code: String?): ViewModel() {
 
     private var database: DatabaseReference = FirebaseDatabase.getInstance().reference.child("games")
     private lateinit var gameFinishListener: ValueEventListener
+    private lateinit var game: Game
 
     private val _word = MutableLiveData<String>()
     val word: LiveData<String>
@@ -24,9 +26,13 @@ class GameViewModel(isCreator: Boolean, isJoiner: Boolean, code: String?): ViewM
     val code: LiveData<String>
         get() = _code
 
-    private val _score = MutableLiveData<Int>()
-    val score: LiveData<Int>
-        get() = _score
+    private val _player1Score = MutableLiveData<Int>()
+    val player1Score: LiveData<Int>
+        get() = _player1Score
+
+    private val _player2Score = MutableLiveData<Int>()
+    val player2Score: LiveData<Int>
+        get() = _player2Score
 
     private val _currentTime = MutableLiveData<Long>()
     private val currentTime: LiveData<Long>
@@ -72,10 +78,7 @@ class GameViewModel(isCreator: Boolean, isJoiner: Boolean, code: String?): ViewM
 
             override fun onDataChange(snapshot: DataSnapshot) {
                 if (snapshot.exists()) {
-                    val game = Game()
-                    game.player1 = snapshot.child("player1").value.toString()
-                    game.player2 = snapshot.child("player2").value.toString()
-                    game.code = snapshot.child("code").value.toString()
+                    game = snapshot.getValue<Game>()!!
                     game.isPlayer2Turn = true
                     database.child(code.value!!).setValue(game)
                 }
@@ -89,6 +92,10 @@ class GameViewModel(isCreator: Boolean, isJoiner: Boolean, code: String?): ViewM
         }
         _code.value = code
         _eventGameFinish.value = false
+        _player1Score.value = 0
+        _player2Score.value = 0
+        game = Game()
+        resetList()
     }
 
     private lateinit var wordList: MutableList<String>
@@ -102,7 +109,7 @@ class GameViewModel(isCreator: Boolean, isJoiner: Boolean, code: String?): ViewM
         private const val ONE_SECOND = 1000L
 
         // Total time for the game
-        private const val COUNTDOWN_TIME = 6000L
+        private const val COUNTDOWN_TIME = 60000L
 
     }
 
@@ -118,11 +125,7 @@ class GameViewModel(isCreator: Boolean, isJoiner: Boolean, code: String?): ViewM
 
             override fun onDataChange(snapshot: DataSnapshot) {
                 if (snapshot.exists()) {
-                    val game = Game()
-                    game.player1 = snapshot.child("player1").value.toString()
-                    game.player2 = snapshot.child("player2").value.toString()
-                    game.code = snapshot.child("code").value.toString()
-                    game.isPlayer2Turn = true
+                    game = snapshot.getValue<Game>()!!
                     game.isGameFinished = true
                     database.child(code.value!!).setValue(game)
                     _eventGameFinish.value = true
@@ -168,17 +171,32 @@ class GameViewModel(isCreator: Boolean, isJoiner: Boolean, code: String?): ViewM
     }
 
     fun onSkip() {
-        _score.value = (score.value)?.minus(1)
+        if (isCreator){
+            _player2Score.value = (player2Score.value)?.minus(1)
+            updatePlayer2Score()
+        }
+        if (isJoiner) {
+            _player1Score.value = (player1Score.value)?.minus(1)
+            updatePlayer1Score()
+        }
         nextWord()
     }
 
     fun onCorrect() {
-        _score.value = (score.value)?.plus(1)
+        if (isCreator){
+            _player2Score.value = (player2Score.value)?.plus(1)
+            updatePlayer2Score()
+        }
+        if (isJoiner) {
+            _player1Score.value = (player1Score.value)?.plus(1)
+            updatePlayer1Score()
+        }
         nextWord()
     }
 
     fun onStart() {
         _disabledStartButton.value = true
+        nextWord()
         timer.start()
     }
 
@@ -191,5 +209,22 @@ class GameViewModel(isCreator: Boolean, isJoiner: Boolean, code: String?): ViewM
         database.child(code.value!!).removeEventListener(gameFinishListener)
     }
 
+    private fun updatePlayer1Score(){
+        Log.e(TAG, "p1")
+        database.child(code.value!!).child("player1Score").setValue(player1Score.value)
+    }
+
+    private fun updatePlayer2Score(){
+        Log.e(TAG, player1Score.value!!.toString())
+        database.child(code.value!!).child("player2Score").setValue(player2Score.value)
+    }
+
+    fun setPlayer1Score(score: Int){
+        _player1Score.value = score
+    }
+
+    fun setPlayer2Score(score: Int){
+        _player2Score.value = score
+    }
 
 }

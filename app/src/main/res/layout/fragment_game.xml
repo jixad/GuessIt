@@ -13,14 +13,15 @@
         android:id="@+id/game_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".screens.game.GameFragment">
+        tools:context=".screens.game.GameFragment"
+        android:background="#EEE7E7">
 
         <TextView
             android:id="@+id/word_is_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="16dp"
-            android:fontFamily="sans-serif"
+            android:fontFamily="@font/roboto_bold"
             android:text="@string/the_word_is"
             android:textSize="14sp"
             android:textStyle="normal"
@@ -80,18 +81,6 @@
             app:layout_constraintStart_toStartOf="parent"
             tools:text="Score: 2" />
 
-        <Button
-            android:id="@+id/skip_button"
-            android:layout_width="wrap_content"
-            android:layout_height="48dp"
-            android:layout_marginStart="8dp"
-            android:onClick="@{() -> viewModel.onSkip()}"
-            android:text="@string/skip"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/start_button"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/guideline" />
-
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/guideline"
             android:layout_width="wrap_content"
@@ -100,11 +89,25 @@
             app:layout_constraintGuide_end="96dp" />
 
         <Button
+            android:id="@+id/skip_button"
+            android:layout_width="wrap_content"
+            android:layout_height="48dp"
+            android:layout_marginStart="8dp"
+            android:onClick="@{() -> viewModel.onSkip()}"
+            android:text="@string/skip"
+            style="@style/button_style"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/start_button"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/guideline" />
+
+        <Button
             android:id="@+id/start_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:onClick="@{() -> viewModel.onStart()}"
             android:text="@string/start"
+            style="@style/button_style"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/correct_button"
             app:layout_constraintStart_toEndOf="@id/skip_button"
@@ -117,6 +120,7 @@
             android:layout_marginEnd="8dp"
             android:onClick="@{() -> viewModel.onCorrect()}"
             android:text="@string/correct"
+            style="@style/button_style"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/start_button"
