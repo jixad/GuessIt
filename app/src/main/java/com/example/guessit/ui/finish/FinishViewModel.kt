@@ -10,7 +10,7 @@ import com.google.firebase.database.ktx.getValue
 class FinishViewModel(private var code: String): ViewModel() {
 
     private var database: DatabaseReference = FirebaseDatabase.getInstance().reference.child("games")
-    private lateinit var winnerListener: ValueEventListener
+    private var winnerListener: ValueEventListener
 
     private val _winner = MutableLiveData<String>()
     val winner: LiveData<String>

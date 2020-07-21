@@ -1,8 +1,6 @@
 package com.example.guessit.ui.game
 
-import android.content.ContentValues.TAG
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -79,7 +77,6 @@ class GameFragment : Fragment() {
             override fun onDataChange(snapshot: DataSnapshot) {
                 if(snapshot.exists()){
                     if (GameFragmentArgs.fromBundle(requireArguments()).isJoiner) {
-                        Log.e(TAG, "TRUE")
                         binding.startButton.isEnabled = true
                     }
                 }
@@ -92,7 +89,6 @@ class GameFragment : Fragment() {
 
             override fun onDataChange(snapshot: DataSnapshot) {
                 if(snapshot.exists()){
-                    Log.e(TAG, "FINISH!!!!")
                     if (GameFragmentArgs.fromBundle(requireArguments()).isCreator) {
                         viewModel.endGameForCreator()
                     }
@@ -164,7 +160,6 @@ class GameFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        Log.e(TAG, "REmoved")
         if (GameFragmentArgs.fromBundle(requireArguments()).isJoiner){
             viewModel.detachListener()
         }

@@ -1,7 +1,5 @@
 package com.example.guessit.ui.join
 
-import android.content.ContentValues.TAG
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -36,7 +34,6 @@ class JoinViewModel: ViewModel() {
         override fun onDataChange(snapshot: DataSnapshot) {
             if (snapshot.exists()) {
                 if (snapshot.child("player2").value==null){
-                    Log.e(TAG, "Empty")
                     val game = Game()
                     game.player1 = snapshot.child("player1").value.toString()
                     game.code = snapshot.child("code").value.toString()
@@ -46,7 +43,6 @@ class JoinViewModel: ViewModel() {
                     _joinError.value = false
                     _gameFull.value = false
                 } else {
-                    Log.e(TAG, "Not Empty")
                     _gameFull.value = true
                 }
             } else {

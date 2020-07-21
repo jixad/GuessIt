@@ -20,7 +20,11 @@
             app:popExitAnim="@anim/slide_out_left" />
         <action
             android:id="@+id/action_mainFragment_to_joinFragment"
-            app:destination="@id/joinFragment" />
+            app:destination="@id/joinFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_right"
+            app:popExitAnim="@anim/slide_out_left" />
     </fragment>
     <fragment
         android:id="@+id/createRoomFragment"
@@ -34,10 +38,12 @@
             app:exitAnim="@anim/slide_out_left"
             app:launchSingleTop="true"
             app:popEnterAnim="@anim/slide_in_right"
-            app:popExitAnim="@anim/slide_out_left"/>
+            app:popExitAnim="@anim/slide_out_left" />
         <action
             android:id="@+id/action_createRoomFragment_to_mainFragment"
-            app:destination="@id/mainFragment" />
+            app:destination="@id/mainFragment"
+            app:enterAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_out_left" />
     </fragment>
     <fragment
         android:id="@+id/waitingFragment"
@@ -53,6 +59,8 @@
         <action
             android:id="@+id/action_waitingFragment_to_mainFragment"
             app:destination="@id/mainFragment"
+            app:enterAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_out_left"
             app:popUpTo="@id/mainFragment"
             app:popUpToInclusive="true" />
     </fragment>
@@ -63,10 +71,14 @@
         tools:layout="@layout/fragment_join">
         <action
             android:id="@+id/action_joinFragment_to_mainFragment"
-            app:destination="@id/mainFragment" />
+            app:destination="@id/mainFragment"
+            app:enterAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_out_left" />
         <action
             android:id="@+id/action_joinFragment_to_gameFragment"
-            app:destination="@id/gameFragment" />
+            app:destination="@id/gameFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:popEnterAnim="@anim/slide_in_right" />
     </fragment>
     <fragment
         android:id="@+id/gameFragment"
@@ -87,7 +99,9 @@
             app:nullable="true" />
         <action
             android:id="@+id/action_gameFragment_to_finishFragment"
-            app:destination="@id/finishFragment" />
+            app:destination="@id/finishFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:popEnterAnim="@anim/slide_in_right" />
     </fragment>
     <fragment
         android:id="@+id/finishFragment"
@@ -100,6 +114,8 @@
         <action
             android:id="@+id/action_finishFragment_pop_including_mainFragment"
             app:destination="@id/mainFragment"
+            app:enterAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_out_left"
             app:popUpTo="@id/mainFragment"
             app:popUpToInclusive="true" />
     </fragment>

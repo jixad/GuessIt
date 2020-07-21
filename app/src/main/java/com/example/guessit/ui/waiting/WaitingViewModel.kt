@@ -1,7 +1,5 @@
 package com.example.guessit.ui.waiting
 
-import android.content.ContentValues.TAG
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -35,10 +33,8 @@ class WaitingViewModel(playerName: String): ViewModel() {
     }
 
     private fun createRoom(){
-        Log.e(TAG, player1.value!!)
         _code.value = UUID.randomUUID().toString().substring(0, 6)
         val game = Game(player1.value!!, null, code.value!!)
-        Log.i("MAL", "123")
         database.child("games").child(code.value!!).setValue(game)
     }
 

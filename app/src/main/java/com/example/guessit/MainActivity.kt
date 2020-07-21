@@ -2,7 +2,6 @@ package com.example.guessit
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import com.example.guessit.ui.main.MainFragment
 
 class MainActivity : AppCompatActivity() {
 

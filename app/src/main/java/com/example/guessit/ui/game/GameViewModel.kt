@@ -1,9 +1,7 @@
 package com.example.guessit.ui.game
 
-import android.content.ContentValues.TAG
 import android.os.CountDownTimer
 import android.text.format.DateUtils
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
@@ -101,14 +99,10 @@ class GameViewModel(private var isCreator: Boolean, private var isJoiner: Boolea
     private lateinit var wordList: MutableList<String>
 
     companion object {
-
-        // Time when the game is over
         private const val DONE = 0L
 
-        // Countdown time interval
         private const val ONE_SECOND = 1000L
 
-        // Total time for the game
         private const val COUNTDOWN_TIME = 60000L
 
     }
@@ -205,17 +199,14 @@ class GameViewModel(private var isCreator: Boolean, private var isJoiner: Boolea
     }
 
     fun detachListener(){
-        Log.i("MAL", "DETACHED")
         database.child(code.value!!).removeEventListener(gameFinishListener)
     }
 
     private fun updatePlayer1Score(){
-        Log.e(TAG, "p1")
         database.child(code.value!!).child("player1Score").setValue(player1Score.value)
     }
 
     private fun updatePlayer2Score(){
-        Log.e(TAG, player1Score.value!!.toString())
         database.child(code.value!!).child("player2Score").setValue(player2Score.value)
     }
 
